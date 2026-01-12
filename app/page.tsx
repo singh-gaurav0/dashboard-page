@@ -1,0 +1,130 @@
+"use client"
+
+import { useState, useEffect, useRef } from "react"
+import { toast } from "sonner"
+import { RefreshCw } from "lucide-react"
+import { Banner } from "@/components/dashboard/banner"
+import { Header } from "@/components/dashboard/header"
+import { Toolbar } from "@/components/dashboard/toolbar"
+import { GridTable } from "@/components/dashboard/grid-table"
+import { FooterTabs } from "@/components/dashboard/footer-tabs"
+import { mockLeads, placeholderRows } from "@/lib/constants/mock-data"
+import { gridColumns as initialColumns, type ColumnConfig } from "@/lib/constants/column-config"
+import { Progress } from "@/components/ui/progress"
+
+export default function DashboardPage() {
+  // State management
+  const [bannerVisible, setBannerVisible] = useState(true)
+  const [isRunning, setIsRunning] = useState(true)
+  const [progress, setProgress] = useState(10)
+  const [selectedRows, setSelectedRows] = useState<number[]>([])
+  const [activeTab, setActiveTab] = useState("bitscale")
+  const [columns, setColumns] = useState<ColumnConfig[]>(initialColumns)
+  const toastIdRef = useRef<string | number | null>(null)
+
+  useEffect(() => {
+    if (isRunning) {
+      toastIdRef.current = toast.custom(
+        () => (
+          <div className="flex items-center gap-3 bg-background border border-border rounded-lg px-4 py-3 shadow-lg">
+            <RefreshCw className="h-4 w-4 text-muted-foreground animate-spin" />
+            <span className="text-sm text-muted-foreground">Grid running</span>
+            <Progress value={progress} className="w-32 h-2" />
+            <span className="text-sm font-medium text-foreground">{Math.round(progress)}%</span>
+          </div>
+        ),
+        { duration: Number.POSITIVE_INFINITY, id: "grid-progress" },
+      )
+    } else {
+      toast.dismiss("grid-progress")
+    }
+  }, [isRunning, progress])
+
+  // Simulate async progress updates
+  useEffect(() => {
+    if (!isRunning) return
+
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          setIsRunning(false)
+          return 100
+        }
+        return prev + Math.random() * 5
+      })
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [isRunning])
+
+  // Row selection handlers
+  const handleRowSelect = (id: number) => {
+    setSelectedRows((prev) => (prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]))
+  }
+
+  const handleSelectAll = () => {
+    if (selectedRows.length === mockLeads.length) {
+      setSelectedRows([])
+    } else {
+      setSelectedRows(mockLeads.map((lead) => lead.id))
+    }
+  }
+
+  const handleKillRun = () => {
+    setIsRunning(false)
+  }
+
+  const handleAddColumn = (newColumn: ColumnConfig) => {
+    setColumns((prev) => [...prev, newColumn])
+  }
+
+  return (
+    <div className="flex flex-col h-screen bg-background">
+      {/* Dismissible Banner */}
+      <Banner
+        type="error"
+        message="Payment failed. 450,000 credits will permanently expire in 30 days"
+        ctaText="Pay Now"
+        onCtaClick={() => console.log("Navigate to payment")}
+        onDismiss={() => setBannerVisible(false)}
+        visible={bannerVisible}
+      />
+
+      {/* Header with breadcrumb and progress */}
+      <Header
+        workbookName="Workbook - Bitscale UX /UI testing flow"
+        flowName="Bitscale grid or..."
+        gridName="Grid view"
+        creditsUsed={500}
+        creditsTotal={500}
+      />
+
+      {/* Toolbar - updated columnCount to use dynamic columns */}
+      <Toolbar
+        rowCount={2000}
+        columnCount={columns.length - 2} // Exclude checkbox and index columns
+        totalColumns={20}
+        isRunning={isRunning}
+        onLoadData={() => console.log("Load data")}
+        onSort={(field) => console.log("Sort by", field)}
+        onFilter={() => console.log("Open filter")}
+        onEnrichment={() => console.log("Enrichment")}
+      />
+
+      {/* Grid Table - added onAddColumn prop */}
+      <GridTable
+        columns={columns}
+        data={mockLeads}
+        placeholderRows={placeholderRows}
+        selectedRows={selectedRows}
+        onRowSelect={handleRowSelect}
+        onSelectAll={handleSelectAll}
+        isAllSelected={selectedRows.length === mockLeads.length}
+        onAddColumn={handleAddColumn}
+      />
+
+      {/* Footer Tabs */}
+      <FooterTabs activeTab={activeTab} onTabChange={setActiveTab} isRunning={isRunning} onKillRun={handleKillRun} />
+    </div>
+  )
+}
