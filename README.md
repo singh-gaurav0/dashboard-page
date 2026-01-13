@@ -1,30 +1,75 @@
-# SaaS dashboard page
+Bitscale – SaaS Dashboard (Assignment)
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+A Figma-accurate, highly interactive SaaS dashboard built as part of the Bitscale assignment.
+The implementation focuses on dynamic UI behavior, scalable architecture, and real product-like interactions, even while using mock data.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/gauravs-projects-4c08266c/v0-saa-s-dashboard-page)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/i1nlsMafNDO)
+🔍 Overview
 
-## Overview
+This project implements a B2B SaaS data grid dashboard inspired directly by the provided Figma design.
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+While the data is mocked, the UI and interactions are built to behave like a real production system, including:
 
-## Deployment
+Dynamic headers and banners
 
-Your project is live at:
+Spreadsheet-style grid with hover interactions
 
-**[https://vercel.com/gauravs-projects-4c08266c/v0-saa-s-dashboard-page](https://vercel.com/gauravs-projects-4c08266c/v0-saa-s-dashboard-page)**
+Config-driven columns and rows
 
-## Build your app
+Async/progress-based UI states
 
-Continue building your app on:
+The goal was not just visual parity, but product-level behavior.
 
-**[https://v0.app/chat/i1nlsMafNDO](https://v0.app/chat/i1nlsMafNDO)**
+🎯 Key Highlights
+✅ Figma-Accurate UI
 
-## How It Works
+Pixel-aligned layout and spacing
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+Spreadsheet / Excel-like grid lines
+
+Hover affordances and row-level interactions
+
+Design-accurate banner, buttons, and typography
+
+⚡ Highly Dynamic by Design
+
+Column definitions driven by configuration (not hardcoded)
+
+Rows rendered from mock data with scalable schema
+
+“Add Column” functionality to dynamically extend the grid
+
+Placeholder rows and loading/progress states to simulate async workflows
+
+🧠 Rich Interactions
+
+Row hover reveals contextual actions
+
+Copy-ready fields and interactive cells
+
+Toolbar actions (filter, sort, enrichment) structured for future API wiring
+
+Responsive behavior with horizontal scrolling on smaller screens
+
+📱 Fully Responsive
+
+Grid scrolls horizontally on mobile without breaking layout
+
+Header, toolbar, and content adapt gracefully to screen size
+
+No fixed heights that block responsiveness
+
+🛠 Tech Stack
+
+Next.js (App Router)
+
+TypeScript
+
+Tailwind CSS
+
+shadcn/ui
+
+Lucide Icons
+
+Sonner (toast infrastructure)
+
+Vercel (deployment)
