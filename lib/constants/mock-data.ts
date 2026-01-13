@@ -8,6 +8,7 @@ export interface LeadData {
   companyWebsite: string
   linkedInJobUrl: string
   emailStatus: "found" | "not_met" | "pending"
+  email? : string
 }
 
 export const mockLeads: LeadData[] = [
@@ -20,6 +21,7 @@ export const mockLeads: LeadData[] = [
     companyWebsite: "https://www.example.com",
     linkedInJobUrl: "https://www.linkedin.com...",
     emailStatus: "found",
+    email: "mike.braham@google.com",
   },
   {
     id: 2,
@@ -30,6 +32,7 @@ export const mockLeads: LeadData[] = [
     companyWebsite: "https://www.sample.com",
     linkedInJobUrl: "https://www.linkedin.com...",
     emailStatus: "found",
+    email: "alex.johnson@amazon.com",
   },
   {
     id: 3,
@@ -40,6 +43,7 @@ export const mockLeads: LeadData[] = [
     companyWebsite: "https://www.testsite.com",
     linkedInJobUrl: "https://www.linkedin.com...",
     emailStatus: "found",
+    email: "sarah.thompson@linkedin.com",
   },
   {
     id: 4,
@@ -70,6 +74,7 @@ export const mockLeads: LeadData[] = [
     companyWebsite: "https://www.webpage.com",
     linkedInJobUrl: "https://www.linkedin.com...",
     emailStatus: "found",
+    email: "james.smith@unilever.com",
   },
   {
     id: 7,
@@ -110,6 +115,7 @@ export const mockLeads: LeadData[] = [
     companyWebsite: "https://www.originalsite.c...",
     linkedInJobUrl: "https://www.linkedin.com...",
     emailStatus: "found",
+    email: "daniel.harris@microsoft.com",
   },
   {
     id: 11,
@@ -120,6 +126,7 @@ export const mockLeads: LeadData[] = [
     companyWebsite: "https://www.freshpage.c...",
     linkedInJobUrl: "https://www.linkedin.com...",
     emailStatus: "found",
+    email: "megan.clark@apple.com",
   },
   {
     id: 12,
@@ -140,14 +147,90 @@ export const mockLeads: LeadData[] = [
     companyWebsite: "https://www.alternativesi...",
     linkedInJobUrl: "https://www.linkedin.com...",
     emailStatus: "found",
+    email: "samantha.hall@google.com",
+  },
+  {
+    id: 14,
+    importedData: "Rachel Martinez",
+    lastUpdatedAt: "Oct 12, 2024 at 14:08 PM",
+    companyName: "Google",
+    companyLogo: "google",
+    companyWebsite: "https://www.platform.com",
+    linkedInJobUrl: "https://www.linkedin.com...",
+    emailStatus: "found",
+    email: "contact@microsoft.com",
+  },
+  {
+    id: 15,
+    importedData: "Tom Anderson",
+    lastUpdatedAt: "Oct 12, 2024 at 14:08 PM",
+    companyName: "Amazon",
+    companyLogo: "amazon",
+    companyWebsite: "https://www.cloud.com",
+    linkedInJobUrl: "https://www.linkedin.com...",
+    emailStatus: "found",
+    email: "contact@microsoft.com",
+  },
+  {
+    id: 16,
+    importedData: "",
+    lastUpdatedAt: "Oct 12, 2024 at 14:08 PM",
+    companyName: "LinkedIn",
+    companyLogo: "linkedin",
+    companyWebsite: "https://www.network.com",
+    linkedInJobUrl: "https://www.linkedin.com...",
+    emailStatus: "not_met",
+  },
+  {
+    id: 17,
+    importedData: "",
+    lastUpdatedAt: "Oct 12, 2024 at 14:08 PM",
+    companyName: "Microsoft",
+    companyLogo: "microsoft",
+    companyWebsite: "https://www.software.com",
+    linkedInJobUrl: "https://www.linkedin.com...",
+    emailStatus: "found",
+    email: "contact@microsoft.com",
+  },
+  {
+    id: 18,
+    importedData: "",
+    lastUpdatedAt: "Oct 12, 2024 at 14:08 PM",
+    companyName: "Apple",
+    companyLogo: "apple",
+    companyWebsite: "https://www.devices.com",
+    linkedInJobUrl: "https://www.linkedin.com...",
+    emailStatus: "found",
+    email: "contact@microsoft.com",
+  },
+  {
+    id: 19,
+    importedData: "",
+    lastUpdatedAt: "Oct 12, 2024 at 14:08 PM",
+    companyName: "TED",
+    companyLogo: "ted",
+    companyWebsite: "https://www.talks.com",
+    linkedInJobUrl: "https://www.linkedin.com...",
+    emailStatus: "not_met",
+  },
+  {
+    id: 20,
+    importedData: "",
+    lastUpdatedAt: "Oct 12, 2024 at 14:08 PM",
+    companyName: "Unilever",
+    companyLogo: "unilever",
+    companyWebsite: "https://www.consumer.com",
+    linkedInJobUrl: "https://www.linkedin.com...",
+    emailStatus: "found",
+    email: "contact@microsoft.com",
   },
 ]
 
 // Empty placeholder rows
 export const placeholderRows = [
-  { id: 14, importedData: "Google" },
-  { id: 15, importedData: "Amazon" },
-  { id: 16, importedData: "LinkedIn" },
-  { id: 17, importedData: "LinkedIn" },
-  { id: 18, importedData: "LinkedIn" },
+  { id: 21, importedData: "Google" },
+  { id: 22, importedData: "Amazon" },
+  { id: 23, importedData: "LinkedIn" },
+  { id: 24, importedData: "LinkedIn" },
+  { id: 25, importedData: "LinkedIn" },
 ]

@@ -1,6 +1,6 @@
 "use client"
 
-import { X, AlertCircle, AlertTriangle, Info } from "lucide-react"
+import { AlertCircle, AlertTriangle, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -9,16 +9,21 @@ interface BannerProps {
   message: string
   ctaText?: string
   onCtaClick?: () => void
-  onDismiss?: () => void
   visible?: boolean
 }
 
-export function Banner({ type, message, ctaText, onCtaClick, onDismiss, visible = true }: BannerProps) {
+export function Banner({
+  type,
+  message,
+  ctaText,
+  onCtaClick,
+  visible = true,
+}: BannerProps) {
   if (!visible) return null
 
   const styles = {
     error: {
-      bg: "bg-red-500",
+      bg: "bg-[#C81E1E]",
       icon: AlertCircle,
     },
     warning: {
@@ -34,22 +39,48 @@ export function Banner({ type, message, ctaText, onCtaClick, onDismiss, visible 
   const { bg, icon: Icon } = styles[type]
 
   return (
-    <div className={cn("w-full py-2 px-4 flex items-center justify-center gap-3", bg)}>
-      <Icon className="h-4 w-4 text-white shrink-0" />
-      <span className="text-white text-sm font-medium">{message}</span>
+    <div
+      className={cn(
+        "w-full px-4 py-2 flex items-center gap-3",
+        "justify-between lg:justify-center",
+        bg
+      )}
+    >
+      {/* Message + Icon */}
+      <div className="flex items-center gap-2 min-w-0">
+       
+
+        <span
+          className="
+            text-white text-sm font-medium
+            truncate
+            max-w-[220px]
+            sm:max-w-[420px]
+            md:max-w-[640px]
+          "
+          title={message}
+        >
+          {message}
+        </span>
+        <Icon className="h-[18px] w-[18px] text-white shrink-0" />
+      </div>
+
+      {/* CTA — ALWAYS visible */}
       {ctaText && (
-        <Button
-          variant="secondary"
-          size="sm"
-          className="h-7 px-3 bg-white text-gray-900 hover:bg-gray-100 font-medium"
+        <button
           onClick={onCtaClick}
+          className="
+            shrink-0
+            px-3 sm:px-4 py-[4px]
+            rounded-[8px]
+            bg-white text-black
+            border border-black
+            shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]
+            hover:bg-white
+            text-xs sm:text-sm
+          "
         >
           {ctaText}
-        </Button>
-      )}
-      {onDismiss && (
-        <button onClick={onDismiss} className="ml-auto text-white/80 hover:text-white" aria-label="Dismiss banner">
-          <X className="h-4 w-4" />
         </button>
       )}
     </div>

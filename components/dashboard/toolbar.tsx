@@ -1,6 +1,17 @@
 "use client"
 
-import { ChevronDown, Upload, Rows3, Columns3, ArrowUpDown, Filter, Sparkles, Settings2, Menu } from "lucide-react"
+import Image from "next/image"
+import {
+  ChevronDown,
+  ListFilter,
+  Upload,
+  Rows3,
+  Columns3,
+  ArrowUpDown,
+  Filter,
+  Sparkles,
+  Menu,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -10,6 +21,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
+import { showV2Info } from "@/lib/toasts"
 
 interface ToolbarProps {
   rowCount: number
@@ -34,6 +46,7 @@ export function Toolbar({
 }: ToolbarProps) {
   return (
     <div className="flex items-center justify-between px-2 sm:px-4 py-2 border-b border-border bg-muted/30 gap-2">
+      {/* Mobile actions */}
       <div className="flex sm:hidden">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -43,29 +56,57 @@ export function Toolbar({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
-            <DropdownMenuItem onClick={onLoadData} disabled={isRunning}>
+            <DropdownMenuItem
+              onClick={() => {
+                showV2Info("Load Data")
+                onLoadData?.()
+              }}
+              disabled={isRunning}
+            >
               <Upload className="h-4 w-4 mr-2" />
               Load Data
             </DropdownMenuItem>
-            <DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => showV2Info("Rows info")}>
               <Rows3 className="h-4 w-4 mr-2" />
               {rowCount} Rows
             </DropdownMenuItem>
-            <DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => showV2Info("Columns info")}>
               <Columns3 className="h-4 w-4 mr-2" />
               {columnCount}/{totalColumns} Columns
             </DropdownMenuItem>
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onSort?.("name")}>
+
+            <DropdownMenuItem
+              onClick={() => {
+                showV2Info("Sort by Name")
+                onSort?.("name")
+              }}
+            >
               <ArrowUpDown className="h-4 w-4 mr-2" />
               Sort by Name
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onSort?.("date")}>
+
+            <DropdownMenuItem
+              onClick={() => {
+                showV2Info("Sort by Date")
+                onSort?.("date")
+              }}
+            >
               <ArrowUpDown className="h-4 w-4 mr-2" />
               Sort by Date
             </DropdownMenuItem>
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={onFilter}>
+
+            <DropdownMenuItem
+              onClick={() => {
+                showV2Info("Filter")
+                onFilter?.()
+              }}
+            >
               <Filter className="h-4 w-4 mr-2" />
               Filter
             </DropdownMenuItem>
@@ -73,141 +114,168 @@ export function Toolbar({
         </DropdownMenu>
       </div>
 
-      <div className="hidden sm:flex items-center gap-1 lg:gap-2 flex-wrap">
+      {/* Desktop toolbar */}
+      <div className="hidden sm:flex items-center gap-1 lg:gap-3 flex-wrap">
         {/* Load Data */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-1.5 bg-transparent text-xs lg:text-sm"
-              disabled={isRunning}
-            >
-              <Upload className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
-              <span className="hidden md:inline">Load Data</span>
-              <Badge
-                variant="secondary"
-                className="h-4 w-4 lg:h-5 lg:w-5 p-0 flex items-center justify-center rounded-full bg-blue-500 text-white text-[10px] lg:text-xs"
+            <div className="relative inline-flex">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1.5 bg-muted rounded-md text-xs lg:text-sm border-none"
+                disabled={isRunning}
+                onClick={() => showV2Info("Load Data")}
               >
+                <Image
+                  src="/icons/combined.svg"
+                  alt="Credits"
+                  width={14}
+                  height={14}
+                  className="h-5 w-7.5"
+                />
+                <span className="hidden md:inline">Load Data</span>
+                <ChevronDown className="h-3 w-3 text-gray-700" />
+              </Button>
+              <span className="absolute -top-1 -right-1 h-[16px] w-[16px] rounded-full bg-blue-700 flex items-center justify-center text-[10px] font-medium text-white leading-none pointer-events-none">
                 1
-              </Badge>
-              <ChevronDown className="h-3 w-3" />
-            </Button>
+              </span>
+            </div>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent>
-            <DropdownMenuItem onClick={onLoadData}>Import CSV</DropdownMenuItem>
-            <DropdownMenuItem>Import from CRM</DropdownMenuItem>
-            <DropdownMenuItem>Paste data</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => showV2Info("Import CSV")}>
+              Import CSV
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => showV2Info("Import from CRM")}>
+              Import from CRM
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => showV2Info("Paste data")}>
+              Paste data
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <div className="h-6 w-px bg-border" />
 
         {/* Rows */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-1.5 bg-transparent text-xs lg:text-sm">
-              <Rows3 className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
-              {rowCount} <span className="hidden lg:inline">Rows</span>
-              <Badge
-                variant="secondary"
-                className="h-4 w-4 lg:h-5 lg:w-5 p-0 flex items-center justify-center rounded-full bg-blue-500 text-white text-[10px]"
+            <div className="relative inline-flex">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1.5 bg-transparent text-xs lg:text-sm"
+                onClick={() => showV2Info("Rows")}
               >
-                •
-              </Badge>
-              <ChevronDown className="h-3 w-3" />
-            </Button>
+                <Image src="/icons/rows.svg" alt="row" width={14} height={14} className="h-3 w-3" />
+                {rowCount} <span className="hidden lg:inline">Rows</span>
+                <ChevronDown className="h-3 w-3" />
+              </Button>
+              <span className="absolute top-0 right-0 h-[6px] w-[6px] rounded-full bg-blue-700" />
+            </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>Show 100 rows</DropdownMenuItem>
-            <DropdownMenuItem>Show 500 rows</DropdownMenuItem>
-            <DropdownMenuItem>Show 1000 rows</DropdownMenuItem>
-            <DropdownMenuItem>Show all rows</DropdownMenuItem>
-          </DropdownMenuContent>
         </DropdownMenu>
 
         {/* Columns */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-1.5 bg-transparent text-xs lg:text-sm">
-              <Columns3 className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
-              {columnCount}/{totalColumns} <span className="hidden lg:inline">Columns</span>
-              <Badge
-                variant="secondary"
-                className="h-4 w-4 lg:h-5 lg:w-5 p-0 flex items-center justify-center rounded-full bg-blue-500 text-white text-[10px]"
+            <div className="relative inline-flex">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1.5 bg-transparent text-xs lg:text-sm"
+                onClick={() => showV2Info("Columns")}
               >
-                •
-              </Badge>
-              <ChevronDown className="h-3 w-3" />
-            </Button>
+                <Image src="/icons/columns.svg" alt="col" width={14} height={14} className="h-3.5 w-3.5" />
+                {columnCount}/{totalColumns} <span className="hidden lg:inline">Columns</span>
+                <ChevronDown className="h-3 w-3" />
+              </Button>
+              <span className="absolute top-0 right-0 h-[6px] w-[6px] rounded-full bg-blue-700" />
+            </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>Select all columns</DropdownMenuItem>
-            <DropdownMenuItem>Reset columns</DropdownMenuItem>
-          </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Sort By */}
+        {/* Sort */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-1.5 bg-transparent text-xs lg:text-sm">
-              <ArrowUpDown className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
-              <span className="hidden md:inline">Sort by</span>
-              <ChevronDown className="h-3 w-3" />
-            </Button>
+            <div className="relative inline-flex">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1.5 bg-transparent text-xs lg:text-sm"
+                onClick={() => showV2Info("Sort")}
+              >
+                <ArrowUpDown className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-gray-400" />
+                <span className="hidden md:inline">Sort by</span>
+                <ChevronDown className="h-3.5 w-3.5" />
+              </Button>
+              <span className="absolute top-0 right-0 h-[6px] w-[6px] rounded-full bg-blue-700" />
+            </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={() => onSort?.("name")}>Name</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onSort?.("date")}>Last Updated</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onSort?.("company")}>Company</DropdownMenuItem>
-          </DropdownMenuContent>
         </DropdownMenu>
 
         {/* Filter */}
-        <Button variant="outline" size="sm" className="gap-1.5 bg-transparent text-xs lg:text-sm" onClick={onFilter}>
-          <Filter className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
-          <span className="hidden md:inline">Filter</span>
-          <Badge
-            variant="secondary"
-            className="h-4 w-4 lg:h-5 lg:w-5 p-0 flex items-center justify-center rounded-full bg-blue-500 text-white text-[10px] lg:text-xs"
+        <div className="relative inline-flex">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5 bg-transparent text-xs lg:text-sm"
+            onClick={() => {
+              showV2Info("Filter")
+              onFilter?.()
+            }}
           >
+            <ListFilter className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-gray-400" />
+            <span className="hidden md:inline">Filter</span>
+          </Button>
+          <span className="absolute -top-1 -right-1 h-[16px] w-[16px] rounded-full bg-blue-700 flex items-center justify-center text-[10px] font-medium text-white leading-none pointer-events-none">
             1
-          </Badge>
-        </Button>
+          </span>
+        </div>
       </div>
 
-      {/* Right side controls */}
+      {/* Right side */}
       <div className="flex items-center gap-1 lg:gap-2">
-        {/* Action */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-1.5 bg-transparent text-xs lg:text-sm">
+            <Button variant="outline" size="sm" className="gap-1.5 bg-gray-100 border-none text-xs lg:text-sm">
               <span className="hidden sm:inline">Action</span>
               <span className="sm:hidden">Act</span>
               <ChevronDown className="h-3 w-3" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>Export selected</DropdownMenuItem>
-            <DropdownMenuItem>Delete selected</DropdownMenuItem>
-            <DropdownMenuItem>Bulk edit</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => showV2Info("Export selected")}>
+              Export selected
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => showV2Info("Delete selected")}>
+              Delete selected
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => showV2Info("Bulk edit")}>
+              Bulk edit
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Enrichment */}
         <Button
           size="sm"
-          className="gap-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs lg:text-sm"
-          onClick={onEnrichment}
+          onClick={() => {
+            showV2Info("Enrichment")
+            onEnrichment?.()
+          }}
           disabled={isRunning}
+          className="flex items-center justify-center gap-2 px-[3px] py-[2px] rounded-l-lg bg-gray-800 text-white text-xs lg:text-sm"
         >
-          <Sparkles className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
-          <span className="hidden sm:inline">Enrichment</span>
+          <div className="flex items-center justify-center gap-2">
+            <Sparkles className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
+            <span className="hidden sm:inline">Enrichment</span>
+          </div>
+          <div className="h-6 w-px bg-white" />
           <ChevronDown className="h-3 w-3" />
         </Button>
 
-        {/* Settings */}
-        <Button variant="ghost" size="icon" className="h-7 w-7 lg:h-8 lg:w-8">
-          <Settings2 className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
-        </Button>
+        <Image src="/icons/spark.svg" alt="col" width={14} height={14} className="h-7 w-7" />
       </div>
     </div>
   )

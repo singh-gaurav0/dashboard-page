@@ -5,17 +5,19 @@ export interface ColumnConfig {
   width: string
   type: "text" | "date" | "link" | "company" | "status" | "checkbox" | "index"
   sortable?: boolean
+  expandable?: boolean
+  expandsTo?: "email"
 }
 
 export const gridColumns: ColumnConfig[] = [
-  { id: "checkbox", label: "", width: "w-10 min-w-[40px]", type: "checkbox" },
-  { id: "index", label: "", width: "w-10 min-w-[40px]", type: "index" },
+  { id: "index", label: "", width: "w-12 min-w-[48px]", type: "index" },
   { id: "importedData", label: "Imported Data", width: "min-w-[180px]", type: "text", sortable: true },
   { id: "lastUpdatedAt", label: "Last Updated At", width: "min-w-[200px]", type: "date", sortable: true },
   { id: "companyName", label: "Company Name", width: "min-w-[150px]", type: "company", sortable: true },
   { id: "companyWebsite", label: "Company Website", width: "min-w-[200px]", type: "link" },
   { id: "linkedInJobUrl", label: "LinkedIn Job URL", width: "min-w-[200px]", type: "link" },
-  { id: "emailStatus", label: "Email Waterfall", width: "min-w-[160px]", type: "status" },
+  { id: "emailStatus", label: "Email Waterfall", width: "min-w-[160px]", type: "status",expandable: true,      // 👈 click interaction
+    expandsTo: "email",  },
 ]
 
 export const tabConfig = [

@@ -20,20 +20,40 @@ export default function DashboardPage() {
   const [selectedRows, setSelectedRows] = useState<number[]>([])
   const [activeTab, setActiveTab] = useState("bitscale")
   const [columns, setColumns] = useState<ColumnConfig[]>(initialColumns)
+  const [loadingRowIds, setLoadingRowIds] = useState<number[]>(
+    Array.from({ length: 13 }, (_, i) => i + 8) 
+  )
   const toastIdRef = useRef<string | number | null>(null)
 
   useEffect(() => {
     if (isRunning) {
       toastIdRef.current = toast.custom(
         () => (
-          <div className="flex items-center gap-3 bg-background border border-border rounded-lg px-4 py-3 shadow-lg">
-            <RefreshCw className="h-4 w-4 text-muted-foreground animate-spin" />
-            <span className="text-sm text-muted-foreground">Grid running</span>
-            <Progress value={progress} className="w-32 h-2" />
-            <span className="text-sm font-medium text-foreground">{Math.round(progress)}%</span>
+          <div
+            className="flex items-center gap-3 border border-border rounded-xl px-4 py-3"
+            style={{
+              backgroundColor: "rgba(255, 255, 255, 0.9)", // 90% opacity
+              boxShadow: "0px 4px 4px 0px #00000040",
+            }}
+          >
+            <span className="text-sm text-muted-foreground">
+              Grid running
+            </span>
+      
+            <Progress
+              value={progress}
+              className="w-32 h-2 [&>div]:bg-[#1A56DB]"
+            />
+      
+            <span
+              className="text-sm font-medium"
+              style={{ color: "#1A56DB" }}
+            >
+              {Math.round(progress)}%
+            </span>
           </div>
         ),
-        { duration: Number.POSITIVE_INFINITY, id: "grid-progress" },
+        { duration: Number.POSITIVE_INFINITY, id: "grid-progress" }
       )
     } else {
       toast.dismiss("grid-progress")
@@ -43,19 +63,37 @@ export default function DashboardPage() {
   // Simulate async progress updates
   useEffect(() => {
     if (!isRunning) return
-
+  
     const interval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) {
+        const next = prev + Math.random() * 5
+  
+        if (next >= 100) {
           setIsRunning(false)
           return 100
         }
-        return prev + Math.random() * 5
+  
+        return next
       })
-    }, 1000)
-
+    }, 700)
+  
     return () => clearInterval(interval)
   }, [isRunning])
+  
+
+  useEffect(() => {
+    if (!isRunning || loadingRowIds.length === 0) return
+
+    const interval = setInterval(() => {
+      setLoadingRowIds((prev) => {
+        if (prev.length === 0) return prev
+        // Remove one row from loading state
+        return prev.slice(1)
+      })
+    }, 1500) // Reveal a new row every 1.5 seconds
+
+    return () => clearInterval(interval)
+  }, [isRunning, loadingRowIds.length])
 
   // Row selection handlers
   const handleRowSelect = (id: number) => {
@@ -86,15 +124,13 @@ export default function DashboardPage() {
         message="Payment failed. 450,000 credits will permanently expire in 30 days"
         ctaText="Pay Now"
         onCtaClick={() => console.log("Navigate to payment")}
-        onDismiss={() => setBannerVisible(false)}
         visible={bannerVisible}
       />
 
       {/* Header with breadcrumb and progress */}
       <Header
         workbookName="Workbook - Bitscale UX /UI testing flow"
-        flowName="Bitscale grid or..."
-        gridName="Grid view"
+        flowName="Bitscale grid only "
         creditsUsed={500}
         creditsTotal={500}
       />
@@ -115,7 +151,7 @@ export default function DashboardPage() {
       <GridTable
         columns={columns}
         data={mockLeads}
-        placeholderRows={placeholderRows}
+        loadingRowIds={loadingRowIds}
         selectedRows={selectedRows}
         onRowSelect={handleRowSelect}
         onSelectAll={handleSelectAll}
