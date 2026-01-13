@@ -24,7 +24,18 @@ export default function DashboardPage() {
     Array.from({ length: 13 }, (_, i) => i + 8) 
   )
   const toastIdRef = useRef<string | number | null>(null)
+  const [customColumnData, setCustomColumnData] = useState<Record<string, Record<number, string>>>({})
 
+  // Called when user edits a cell in a column they added via "Add Column"
+  const handleCellEdit = (columnId: string, rowId: number, value: string) => {
+    setCustomColumnData((prev) => ({
+      ...prev,
+      [columnId]: {
+        ...prev[columnId],
+        [rowId]: value,
+      },
+    }))
+  }
   useEffect(() => {
     if (isRunning) {
       toastIdRef.current = toast.custom(
@@ -119,13 +130,7 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col h-screen bg-background">
       {/* Dismissible Banner */}
-      <Banner
-        type="error"
-        message="Payment failed. 450,000 credits will permanently expire in 30 days"
-        ctaText="Pay Now"
-        onCtaClick={() => console.log("Navigate to payment")}
-        visible={bannerVisible}
-      />
+
 
       {/* Header with breadcrumb and progress */}
       <Header
@@ -134,7 +139,13 @@ export default function DashboardPage() {
         creditsUsed={500}
         creditsTotal={500}
       />
-
+      <Banner
+        type="error"
+        message="Payment failed. 450,000 credits will permanently expire in 30 days"
+        ctaText="Pay Now"
+        onCtaClick={() => console.log("Navigate to payment")}
+        visible={bannerVisible}
+      />
       {/* Toolbar - updated columnCount to use dynamic columns */}
       <Toolbar
         rowCount={2000}
@@ -157,6 +168,8 @@ export default function DashboardPage() {
         onSelectAll={handleSelectAll}
         isAllSelected={selectedRows.length === mockLeads.length}
         onAddColumn={handleAddColumn}
+        customColumnData={customColumnData}
+        onCellEdit={handleCellEdit}
       />
 
       {/* Footer Tabs */}

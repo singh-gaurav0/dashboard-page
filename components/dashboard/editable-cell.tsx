@@ -56,9 +56,9 @@ export function EditableCell({ value, onChange, type = "text" }: EditableCellPro
   return (
     <div
       onClick={() => setIsEditing(true)}
-      className="text-sm text-muted-foreground cursor-text hover:bg-muted/50 px-2 py-1 -mx-2 -my-1 rounded min-h-[28px] flex items-center"
+      className="text-sm text-gray-700 cursor-text hover:bg-muted/50 px-2 py-1 -mx-2 -my-1 rounded min-h-[28px] flex items-center"
     >
-      {value || <span className="text-muted-foreground/50 italic">Click to edit...</span>}
+      {value || <span className="text-muted-foreground/50 italic">Click to edit</span>}
     </div>
   )
 }

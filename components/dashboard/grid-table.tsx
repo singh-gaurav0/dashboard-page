@@ -10,7 +10,16 @@ import { SkeletonCell } from "./skeleton-cell"
 import type { LeadData } from "@/lib/constants/mock-data"
 import type { ColumnConfig } from "@/lib/constants/column-config"
 import Image from "next/image"
-
+import { EditableCell } from "./editable-cell"
+const originalColumnIds = [
+  "index",
+  "importedData",
+  "lastUpdatedAt",
+  "companyName",
+  "companyWebsite",
+  "linkedInJobUrl",
+  "emailStatus",
+]
 interface GridTableProps {
   columns: ColumnConfig[]
   data: LeadData[]
@@ -20,6 +29,8 @@ interface GridTableProps {
   onSelectAll: () => void
   isAllSelected: boolean
   onAddColumn: (column: ColumnConfig) => void
+  customColumnData?: Record<string, Record<number, string>> // { columnId: { rowId: value } }
+  onCellEdit?: (columnId: string, rowId: number, value: string) => void
 }
 
 function renderCell(column: ColumnConfig, row: LeadData ) {
@@ -114,6 +125,8 @@ export function GridTable({
   onSelectAll,
   isAllSelected,
   onAddColumn,
+  customColumnData = {},
+  onCellEdit,
 }: GridTableProps) {
   return (
     <div className="flex-1 overflow-auto border-t border-border">
@@ -193,29 +206,39 @@ export function GridTable({
                     selectedRows.includes(row.id) ? "bg-blue-50" : "hover:bg-muted/30",
                   )}
                 >
-                  {columns.map((col) => (
-                    <td
-                    key={col.id}
-                    className={cn(
-                      "px-3 py-2 border-b border-r border-border",
-                      col.width,
-                      col.type === "index" && "text-center"
-                    )}
-                  >
-                    {col.type === "index" ? (
-                      <div className="flex items-center justify-center h-full">
-                        <span className="text-sm text-muted-foreground">
-                          {row.id}
-                        </span>
-                      </div>
-                    ) : isLoading ? (
-                      <SkeletonCell type={col.type} />
-                    ) : (
-                      renderCell(col, row)
-                    )}
-                  </td>
-                  
-                  ))}
+                  {columns.map((col) => {
+                    // Custom columns are editable, original columns are not
+                    const isCustomColumn = !originalColumnIds.includes(col.id)
+
+                    return (
+                      <td
+                        key={col.id}
+                        className={cn(
+                          "px-3 py-2 border-b border-r border-border",
+                          col.width,
+                          col.type === "index" && "text-center",
+                        )}
+                      >
+                        {col.type === "index" ? (
+                          <div className="flex items-center justify-center h-full">
+                            <span className="text-sm text-muted-foreground">{row.id}</span>
+                          </div>
+                        ) : isLoading ? (
+                          <SkeletonCell type={col.type} />
+                        ) : isCustomColumn && onCellEdit ? (
+                          // Gets value from customColumnData state, calls onCellEdit when changed
+                          <EditableCell
+                            value={customColumnData[col.id]?.[row.id] || ""}
+                            onChange={(value) => onCellEdit(col.id, row.id, value)}
+                            type={col.type as "text" | "link" | "date"}
+                          />
+                        ) : (
+                          // Original columns use renderCell (read-only)
+                          renderCell(col, row)
+                        )}
+                      </td>
+                    )
+                  })}
                   <td className="border-b border-border min-w-[120px]"></td>
                 </tr>
               )
